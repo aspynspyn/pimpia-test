@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="나는 어떤 동물 같은 분위기일까? 평소 행동과 취향으로 알아보는 7문항 테스트.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="동물 분위기 테스트">
+<meta property="og:description" content="7개 질문, 약 1분. 나는 어떤 동물 분위기?">
+<meta name="theme-color" content="#F1F0F5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%235B4B8A'/%3E%3C/svg%3E">
+<!-- 분석: Vercel Analytics (대시보드에서 Enable 후 동작), GA4는 아래 GA_ID에 측정 ID를 넣으면 동작 -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script>
+  var GA_ID = ""; /* 예: "G-XXXXXXXXXX" — 비워 두면 GA4는 꺼집니다 */
+  if (GA_ID) {
+    var s = document.createElement("script"); s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag("js", new Date()); window.gtag("config", GA_ID);
+  }
+</script>
+<title>동물 분위기 테스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* 레이아웃: 한 화면에 질문 하나, 가운데 정렬된 좁은 카드 흐름. 햇빛을 가린 그늘 같은 라벤더 회색 바탕 */
+:root{
+  --bg:#F1F0F5;
+  --surface:#FFFFFF;
+  --fg:#20202B;
+  --muted:#6A6978;
+  --line:#DAD7E4;
+  --accent:#5B4B8A;
+  --accent-soft:#E6E1F2;
+  --on-accent:#FFFFFF;
+  --f-display:"Gowun Batang","Noto Serif KR",serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15141C;--surface:#1F1D29;--fg:#ECEAF3;--muted:#A19FB3;--line:#34313F;
+    --accent:#B7A8EC;--accent-soft:#2C2740;--on-accent:#17141F;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15141C;--surface:#1F1D29;--fg:#ECEAF3;--muted:#A19FB3;--line:#34313F;
+  --accent:#B7A8EC;--accent-soft:#2C2740;--on-accent:#17141F;color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+body{
+  background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.65;
+  padding-block:32px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.brand{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;font-weight:500}
+h1,h2{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0;line-height:1.35}
+h1{font-size:clamp(28px,8vw,38px)}
+h2{font-size:clamp(21px,5.6vw,25px)}
+p{margin:0}
+.lead{color:var(--muted);max-width:36em}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{
+  background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;
+  padding:14px 28px;font-weight:600;align-self:flex-start;
+}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.meta{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+
+.progress{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .35s ease}
+
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+  padding:16px 18px;line-height:1.5;transition:border-color .15s, background .15s;
+}
+.opt:hover{border-color:var(--accent)}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+
+.result-head{display:flex;flex-direction:column;gap:10px}
+.kicker{font-size:13px;color:var(--accent);font-weight:600;letter-spacing:.04em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.panel h3{margin:0;font-size:13px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.scores{display:flex;flex-direction:column;gap:10px}
+.sc{display:grid;grid-template-columns:7.5em 1fr 3em;gap:10px;align-items:center;font-size:14px}
+.sc .t{min-width:0}
+.sc .b{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.sc .b i{display:block;height:100%;background:var(--accent);opacity:.45}
+.sc.top .b i{opacity:1}
+.sc .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">PIMPIA · Slow Aging</div>
+
+  <section id="start" class="wrap" style="gap:20px">
+    <h1>나는 어떤 동물<br>분위기일까?</h1>
+    <p class="lead">얼굴 분석이 아니라 평소의 행동과 취향으로 보는 테스트입니다. 정답은 없고, 가장 가까운 쪽을 고르면 됩니다.</p>
+    <div class="meta"><span>질문 7개</span><span>약 1분</span></div>
+    <button class="btn" id="go" type="button">테스트 시작</button>
+  </section>
+
+  <section id="quiz" class="wrap" hidden>
+    <div class="progress"><span id="pn">1 / 7</span><div class="bar"><i id="pb"></i></div></div>
+    <h2 id="q"></h2>
+    <div class="opts" id="opts"></div>
+  </section>
+
+  <section id="result" class="wrap" hidden>
+    <div class="result-head">
+      <div class="kicker">나의 동물 분위기</div>
+      <h1 id="rt"></h1>
+      <p class="lead" id="rs"></p>
+    </div>
+    <div class="panel"><h3>사람들이 끌리는 점</h3><p id="rg"></p></div>
+    <div class="panel"><h3>오해받기 쉬운 점</h3><p id="rw"></p></div>
+    <div class="panel"><h3>이번 주 이미지 실험</h3><p id="re"></p><p class="note" id="rp"></p></div>
+    <div class="panel"><h3>유형별 점수</h3><div class="scores" id="sc"></div></div>
+    <div class="row">
+      <button class="btn" id="copy" type="button">결과 문구 복사</button>
+      <button class="btn ghost" id="retry" type="button">다시 하기</button>
+    </div>
+    <p class="note" id="copied" aria-live="polite" style="border:0;padding:0"></p>
+  </section>
+</div>
+
+<script>
+(function(){
+  var TYPES = {
+    C:{name:"선이 분명한 고양이",
+       sum:"쉽게 다가가기 어려워 보이지만, 알고 나면 의리 있는 분위기입니다. 말보다 태도로 신뢰를 주는 타입이에요.",
+       good:"자기 기준이 분명해서 쉽게 흔들리지 않는 인상을 줍니다. 한 번 마음을 연 사람에게는 오래 한결같습니다.",
+       warn:"무표정일 때 차갑거나 관심 없어 보인다는 오해를 받기 쉽습니다. 속마음은 따뜻한데 첫인상에서 가려질 수 있어요.",
+       exp:"이번 주 사진이나 첫 만남에서 눈이 먼저 웃는 표정 하나만 의식해서 보여 주세요. 인상의 온도가 달라집니다.",
+       pim:"윤곽이 또렷한 분위기는 얼굴에 은은한 그늘이 지면 더 차분하고 깊어 보입니다. 외출 때 쓰는 도구도 분위기의 일부가 됩니다."},
+    D:{name:"온기 가득한 강아지",
+       sum:"같이 있으면 마음이 풀리는 분위기입니다. 밝은 에너지로 사람들을 편하게 만드는 타입이에요.",
+       good:"상대의 긴장을 풀어 주는 힘이 있어서 사람들이 먼저 다가옵니다. 팀에서도 분위기를 살리는 역할을 자연스럽게 합니다.",
+       warn:"친근함 때문에 가볍게 보이거나 전문성이 덜 드러날 수 있습니다. 중요한 자리에서는 밝음에 신뢰감이 가려질 수 있어요.",
+       exp:"중요한 자리에서 말속도를 한 템포 늦추고 결론부터 말해 보세요. 따뜻함에 믿음직함이 더해집니다.",
+       pim:"밝은 인상이 장점인 타입은 얼굴이 환하고 부드럽게 보이는 빛 환경이 중요합니다. 강한 직사광선 아래서도 표정이 편안해 보이는지 점검해 보세요."},
+    F:{name:"센스 있는 여우",
+       sum:"분위기를 읽는 눈이 빠르고, 포인트 하나로 인상을 완성하는 타입입니다. 재치와 관찰력이 매력이에요.",
+       good:"상황과 상대에 맞춰 말과 스타일을 조절하는 감각이 좋습니다. 작은 디테일에서 센스가 드러납니다.",
+       warn:"속을 알 수 없거나 계산적이라는 오해를 받을 수 있습니다. 너무 잘 맞추다 보면 정작 내 마음은 숨겨지기도 해요.",
+       exp:"이번 주에 한 번은 계산하지 않고 솔직한 속마음을 먼저 말해 보세요. 센스에 진정성이 더해집니다.",
+       pim:"포인트 하나로 분위기를 만드는 감각이 있다면, 매일 드는 소품 하나를 내 이미지의 시그니처로 정해 보세요."},
+    L:{name:"고요한 사슴",
+       sum:"조용하지만 섬세한 분위기입니다. 오래 볼수록 안정감이 느껴지는 타입이에요.",
+       good:"작은 변화와 상대의 감정을 놓치지 않는 섬세함이 있습니다. 같이 있으면 마음이 가라앉는다는 말을 자주 듣습니다.",
+       warn:"존재감이 약하거나 소극적으로 보일 수 있습니다. 좋은 생각이 있어도 말하지 않으면 전달되지 않습니다.",
+       exp:"회의나 모임에서 이번 주에 한 번은 먼저 의견을 말해 보세요. 한 문장이면 충분합니다.",
+       pim:"부드러운 분위기는 햇빛에 지친 얼굴로 보이면 그 매력이 줄어듭니다. 외출 중 얼굴이 편안해 보이도록 피로를 덜어 주는 습관이 잘 맞아요."}
+  };
+  var Q = [
+    {q:"처음 만난 사람들 사이에서 나는 보통?",
+     o:[["C","조용히 지켜보다가 필요할 때 한마디 한다"],["D","먼저 말을 걸어 분위기를 푼다"],["F","상대에 맞춰 화제를 센스 있게 이어간다"],["L","편안해질 때까지 천천히 다가간다"]]},
+    {q:"약속이 갑자기 취소된 주말 저녁, 나는?",
+     o:[["C","오히려 좋다, 혼자만의 시간을 즐긴다"],["D","다른 친구에게 바로 연락한다"],["F","갑자기 생긴 시간에 해보고 싶던 걸 찾는다"],["L","집에서 차분히 정리하며 쉰다"]]},
+    {q:"친구들이 나를 설명할 때 가장 자주 하는 말은?",
+     o:[["C","쿨하다, 선이 분명하다"],["D","따뜻하다, 같이 있으면 편하다"],["F","센스 있다, 눈치가 빠르다"],["L","차분하다, 섬세하다"]]},
+    {q:"옷장 앞에서 옷을 고르는 기준은?",
+     o:[["C","군더더기 없이 내 스타일에 맞는지"],["D","편하고 밝은 인상을 주는지"],["F","포인트 하나로 분위기가 사는지"],["L","부드러운 소재와 톤이 어울리는지"]]},
+    {q:"사진을 찍힐 때 나는?",
+     o:[["C","꾸민 표정보다 무심한 컷이 더 잘 나온다"],["D","웃을 때 가장 잘 나온다"],["F","내 각도와 표정을 잘 알고 있다"],["L","은은하게 시선을 비껴간 컷이 좋다"]]},
+    {q:"스트레스를 받았을 때 나는?",
+     o:[["C","연락을 줄이고 혼자 충전한다"],["D","사람을 만나 수다로 푼다"],["F","원인을 분석하고 해결책을 찾는다"],["L","산책이나 조용한 루틴으로 가라앉힌다"]]},
+    {q:"면접이나 첫 미팅에서 남기고 싶은 인상은?",
+     o:[["C","믿고 맡길 수 있는 사람"],["D","같이 일하고 싶은 사람"],["F","일머리 좋고 센스 있는 사람"],["L","안정감 있고 섬세한 사람"]]}
+  ];
+  var order = ["C","D","F","L"], score, idx, picks;
+  var $ = function(id){return document.getElementById(id)};
+  function track(name, props){
+    try{ if(window.va){ window.va("event", {name:name, data:Object.assign({test:"animal"}, props||{})}); } }catch(e){}
+    try{ if(window.gtag){ window.gtag("event", name, Object.assign({test:"animal"}, props||{})); } }catch(e){}
+  }
+
+  function show(id){["start","quiz","result"].forEach(function(s){$(s).hidden = (s!==id)});window.scrollTo(0,0)}
+
+  function render(){
+    var item = Q[idx];
+    $("pn").textContent = (idx+1)+" / "+Q.length;
+    $("pb").style.width = (idx/Q.length*100)+"%";
+    $("q").textContent = item.q;
+    var box = $("opts"); box.innerHTML = "";
+    item.o.forEach(function(opt){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "opt"; b.textContent = opt[1];
+      b.addEventListener("click", function(){
+        b.classList.add("on");
+        picks.push(opt[0]); score[opt[0]]++; track("answer",{q:idx+1});
+        setTimeout(next, 180);
+      });
+      box.appendChild(b);
+    });
+  }
+  function next(){
+    idx++;
+    if(idx>=Q.length){ finish(); } else { render(); }
+  }
+  function winner(sc){
+    var best = order[0];
+    order.forEach(function(k){ if(sc[k] > sc[best]) best = k; });
+    return best;
+  }
+  function finish(){
+    $("pb").style.width = "100%";
+    var w = winner(score), T = TYPES[w];
+    track("test_complete",{type:w});
+    $("rt").textContent = T.name; $("rs").textContent = T.sum;
+    $("rg").textContent = T.good; $("rw").textContent = T.warn;
+    $("re").textContent = T.exp; $("rp").textContent = "PIMPIA 한 줄 제안  "+T.pim;
+    var s = $("sc"); s.innerHTML = "";
+    order.forEach(function(k){
+      var pct = Math.round(score[k]/Q.length*100);
+      var d = document.createElement("div"); d.className = "sc"+(k===w?" top":"");
+      d.innerHTML = '<span class="t"></span><span class="b"><i></i></span><span class="n"></span>';
+      d.querySelector(".t").textContent = TYPES[k].name;
+      d.querySelector("i").style.width = pct+"%";
+      d.querySelector(".n").textContent = pct+"%";
+      s.appendChild(d);
+    });
+    $("copied").textContent = "";
+    show("result");
+  }
+  function start(){
+    score = {C:0,D:0,F:0,L:0}; idx = 0; picks = [];
+    track("test_start");
+    show("quiz"); render();
+  }
+  $("go").addEventListener("click", start);
+  $("retry").addEventListener("click", function(){ track("test_retry"); show("start"); });
+  $("copy").addEventListener("click", function(){
+    var w = winner(score), T = TYPES[w];
+    track("result_copy",{type:w});
+    var text = "나의 동물 분위기는 '"+T.name+"'! "+T.sum;
+    function ok(){ $("copied").textContent = "복사했어요. 스토리나 DM에 붙여 넣어 보세요."; }
+    function fail(){ $("copied").textContent = "복사가 막혀 있어요. 아래 문구를 직접 선택해 복사해 주세요: "+text; }
+    try{
+      navigator.clipboard.writeText(text).then(ok, fail);
+    }catch(e){ fail(); }
+  });
+})();
+</script>
+
+</body>
+</html>
